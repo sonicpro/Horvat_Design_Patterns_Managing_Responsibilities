@@ -2,6 +2,8 @@
 {
     public interface IObserver
     {
-        void Update(ISubject subject);
+        void UpdateWithTheOriginalMessage(ISubject subject, string message);
+
+        void UpdateMessage(ISubject subject, string message, string addedPart);
     }
 }

@@ -4,9 +4,9 @@ namespace ObserverDemo
 {
     public class Subject : ISubject
     {
-        protected object payload;
+        protected string message;
 
-        protected List<IObserver> observers = new List<IObserver>();
+        private List<IObserver> observers = new List<IObserver>();
 
         public virtual void Attach(IObserver observer)
         {
@@ -18,11 +18,14 @@ namespace ObserverDemo
             observers.Remove(observer);
         }
 
-        public virtual void Notify()
+        public virtual void Notify(string message)
         {
-            observers.ForEach(o => o.Update(this));
+            observers.ForEach(o => o.UpdateWithTheOriginalMessage(this, message));
         }
 
-        public object GetPayload() => payload;
+        public virtual void NotifyOfTheDataAppending(string completeMessage, string addedPart)
+        {
+            observers.ForEach(o => o.UpdateMessage(this, message, addedPart));
+        }
     }
 }

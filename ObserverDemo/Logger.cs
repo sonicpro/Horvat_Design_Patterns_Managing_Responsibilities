@@ -1,26 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 
 namespace ObserverDemo
 {
     class Logger : IObserver
     {
-        List<ISubject> subjects = new List<ISubject>();
-
-        public Logger(ISubject subjectImInterestedIn)
+        public void UpdateWithTheOriginalMessage(ISubject subject, string message)
         {
-            subjects.Add(subjectImInterestedIn);
+            Console.WriteLine($"Writing down the data: {message.ToUpper()}");
         }
 
-        public void Update(ISubject subject)
+        public void UpdateMessage(ISubject subject, string message, string addedPart)
         {
-            var publisher = subjects.FirstOrDefault(s => s.GetType() == subject.GetType());
-            var payload = "";
-            if (publisher != null)
-            {
-                payload = (string)subject.GetPayload() ?? "";
-            }
-            System.Console.WriteLine($"Writing down the data: {payload.ToUpper()}");
+            Console.WriteLine($"Writing down appended data: {addedPart.ToUpper()}.");
         }
     }
 }

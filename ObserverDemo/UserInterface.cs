@@ -1,26 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace ObserverDemo
+﻿namespace ObserverDemo
 {
     class UserInterface : IObserver
     {
-        List<ISubject> subjects = new List<ISubject>();
-
-        public UserInterface(ISubject subject)
+        public void UpdateWithTheOriginalMessage(ISubject subject, string message)
         {
-            subjects.Add(subject);
+            System.Console.WriteLine($"Hey user, look at this data: {message.ToUpper()}");
         }
 
-        public void Update(ISubject subject)
+        public void UpdateMessage(ISubject subject, string message, string addedPart)
         {
-            var publisher = subjects.FirstOrDefault(s => s.GetType() == subject.GetType());
-            var payload = "";
-            if (publisher != null)
-            {
-                payload = (string)subject.GetPayload() ?? "";
-            }
-            System.Console.WriteLine($"Hey user, look at this data: {payload.ToUpper()}");
+            // noop is here for the UserInterface observer.
         }
     }
 }

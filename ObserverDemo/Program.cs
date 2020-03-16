@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace ObserverDemo
 {
@@ -8,9 +7,11 @@ namespace ObserverDemo
         static void Main(string[] args)
         {
             var doer = new Doer();
-            doer.Attach(new UserInterface(doer));
-            doer.Attach(new Logger(doer));
+            doer.Attach(new UserInterface());
+            doer.Attach(new Logger());
             doer.DoSomethingWith("my data");
+            doer.DoMore("new message for the logger");
+            Console.ReadLine();
         }
     }
 }

@@ -6,8 +6,14 @@ namespace ObserverDemo
     {
         public void DoSomethingWith(string data)
         {
-            payload = data;
-            Notify();
+            this.message = data;
+            Notify(message);
+        }
+
+        public void DoMore(string newData)
+        {
+            this.message += newData;
+            NotifyOfTheDataAppending(message, newData);
         }
     }
 }
