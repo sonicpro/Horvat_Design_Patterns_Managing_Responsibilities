@@ -1,14 +1,14 @@
-﻿namespace ObserverDemo
+﻿using System;
+
+namespace ObserverDemo
 {
     public class Doer
     {
         private string message;
 
-        // You can replace these two fields with the events ot types EventHandler<string> and EventHandler<(string Message, string NewData)> respectively.
-        // Drop the MulticastNotifier<T> class and IObserver<T> interface once you do so.
-        public MulticastNotifier<string> AfterDoSomethingWith;
+        public event EventHandler<string> AfterDoSomethingWith;
 
-        public MulticastNotifier<(string Message, string NewData)> AfterDoMore;
+        public event EventHandler<Tuple<string, string>> AfterDoMore;
 
         public void DoSomethingWith(string data)
         {
@@ -22,13 +22,13 @@
             OnAfterDoMore(message, newData);
         }
 
-        #region Helper methods
+        #region "Raise events" methods
 
         private void OnAfterDoSomethingWith(string data)
         {
             if (AfterDoSomethingWith != null)
             {
-                AfterDoSomethingWith.Notify(message);
+                AfterDoSomethingWith?.Invoke(this, message);
             }
         }
 
@@ -36,7 +36,7 @@
         {
             if (AfterDoMore != null)
             {
-                AfterDoMore.Notify((message, newData));
+                AfterDoMore?.Invoke(this, Tuple.Create(updatedData, newData));
             }
         }
 

@@ -7,9 +7,10 @@ namespace ObserverDemo
         static void Main(string[] args)
         {
             var doer = new Doer();
-            doer.AfterDoSomethingWith += new UserInterface().OriginalMessageNotificationSink;
-            doer.AfterDoSomethingWith += new Logger().OriginalMessageNotificationSink;
-            doer.AfterDoMore += new Logger().UpdateMessageNotificationSink;
+            var logger = new Logger();
+            doer.AfterDoSomethingWith += new UserInterface().UpdateWithTheOriginalMessage;
+            doer.AfterDoSomethingWith += logger.UpdateWithTheOriginalMessage;
+            doer.AfterDoMore += logger.UpdateMessage;
             doer.DoSomethingWith("my data");
             doer.DoMore("new message for the logger");
             Console.ReadLine();
