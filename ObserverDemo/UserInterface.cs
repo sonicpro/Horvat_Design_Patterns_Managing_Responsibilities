@@ -1,15 +1,18 @@
 ﻿namespace ObserverDemo
 {
-    class UserInterface : IObserver
+    class UserInterface
     {
-        public void UpdateWithTheOriginalMessage(ISubject subject, string message)
+        public readonly IObserver<string> OriginalMessageNotificationSink;
+
+        public UserInterface()
         {
-            System.Console.WriteLine($"Hey user, look at this data: {message.ToUpper()}");
+            this.OriginalMessageNotificationSink = new NotificationSink<string>(
+                (sender, data) => this.UpdateWithTheOriginalMessage(sender, data));
         }
 
-        public void UpdateMessage(ISubject subject, string message, string addedPart)
+        public void UpdateWithTheOriginalMessage(object sender, string message)
         {
-            // noop is here for the UserInterface observer.
+            System.Console.WriteLine($"Hey user, look at this data: {message.ToUpper()}");
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿namespace ObserverDemo
 {
-    public interface IObserver
+    public interface IObserver<T>
     {
-        void UpdateWithTheOriginalMessage(ISubject subject, string message);
-
-        void UpdateMessage(ISubject subject, string message, string addedPart);
+        void Update(object sender, T data);
     }
 }
