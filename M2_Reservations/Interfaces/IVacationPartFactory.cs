@@ -1,4 +1,6 @@
 ﻿// Abstract factory that collects all the methods of services providing different vacation parts.
+// Must not know about the dependencies that provide the implementation of those methods.
+// That way we can abstract the dependent class (VacationSpecificationBuilder) of the implementation details of the services it uses at compile time.
 
 using System;
 
