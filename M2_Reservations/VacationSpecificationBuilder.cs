@@ -19,56 +19,56 @@ namespace Reservations
 
         #region Dependencies
 
-        private readonly IHotelService hotelService;
-
-        private readonly IHotelSelector hotelSelector;
-
-        private readonly IAirplaneService airplaneService;
+        IVacationPartFactory partFactory;
 
         #endregion
 
         public VacationSpecificationBuilder(DateTime arrivalDate, int totalNights,
-            IHotelService hotelService,
-            IHotelSelector hotelSelector,
-            IAirplaneService airplaneService,
-            string livingTown, string destinationTown)
+            string livingTown, string destinationTown, IVacationPartFactory partFactory)
         {
             this.arrivalDate = arrivalDate;
             this.totalNights = totalNights;
-            this.hotelService = hotelService;
-            this.hotelSelector = hotelSelector;
-            this.airplaneService = airplaneService;
             this.livingTown = livingTown;
             this.destinationTown = destinationTown;
+            this.partFactory = partFactory;
         }
 
         public VacationSpecification BuildVacation()
         {
             foreach (IVacationPart part in this.parts)
             {
-                part.Purchase();
+                part.Reserve();
             }
             return new VacationSpecification(this.parts);
         }
 
 
-        #region Methods that call services
+        #region Methods that call methods of abstract factory instead of dependency services
 
-        private void SelectHotel(string hotelName)
+        public void SelectHotel(string hotelName)
         {
-            var hotelInfo = this.hotelSelector.SelectHotel(destinationTown, hotelName);
-            this.parts.Add(hotelService.MakeBooking(hotelInfo, arrivalDate, arrivalDate.AddDays(totalNights)));
+            var hotelBooking = this.partFactory.CreateHotelReservation(destinationTown, hotelName,
+                arrivalDate, arrivalDate.AddDays(totalNights));
+            this.parts.Add(hotelBooking);
         }
 
-        private void SelectFlight(string companyName)
+        public void SelectRoundTrip(string companyName)
         {
-            // Round-trip selection
-            var directFlight = this.airplaneService.SelectFlight(companyName,
+            parts.Add(CreateFlightToDestination(companyName));
+            parts.Add(CreateFlightBack(companyName));
+        }
+
+
+        private IVacationPart CreateFlightToDestination(string companyName)
+        {
+            return this.partFactory.CreateFlight(companyName,
                 livingTown, destinationTown, arrivalDate);
-            var returnFlight = this.airplaneService.SelectFlight(companyName,
+        }
+
+        private IVacationPart CreateFlightBack(string companyName)
+        {
+            return this.partFactory.CreateFlight(companyName,
                 destinationTown, livingTown, arrivalDate.AddDays(totalNights));
-            parts.Add(directFlight);
-            parts.Add(returnFlight);
         }
 
         #endregion

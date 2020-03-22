@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Reservations.Services;
 
 namespace Reservations
 {
@@ -6,7 +6,12 @@ namespace Reservations
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new Application(
+                new VacationPartFactory(
+                    new HotelService(),
+                    new HotelSelector(),
+                    new AirplaneService()))
+            .Run();
         }
     }
 }
