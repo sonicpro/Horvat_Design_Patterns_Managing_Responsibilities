@@ -8,7 +8,7 @@ namespace M4_CompositePainters
         // Program that calculates the total time to paint cetrain number of houses by a squad of painters.
         static void Main(string[] args)
         {
-            var scheduler = new ProportionalPaintingScheduler();
+            var scheduler = new WholeNumberOfHousesScheduler();
 
             var smallPaintersCorporation = new PaintingCompany(
                 new IPainter[]

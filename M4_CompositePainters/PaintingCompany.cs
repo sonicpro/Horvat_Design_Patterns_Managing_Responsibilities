@@ -22,7 +22,7 @@ namespace M4_CompositePainters
         {
             return scheduler.Organize(painters, numberOfHouses)
                 .Select(t => t.Painter.EstimateDays(t.HousesToPaint))
-                .First();
+                .Max();
         }
 
         public double Paint(double houses)
@@ -31,7 +31,7 @@ namespace M4_CompositePainters
             return scheduler.Organize(this.painters, houses)
                 .Select(constituent => constituent.Painter.Paint(constituent.HousesToPaint))
                 .ToList() // To get every leaf painter Paint() method executed.
-                .First();
+                .Max();
         }
     }
 }
