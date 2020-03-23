@@ -1,27 +1,29 @@
-﻿using System;
+﻿using M4_CompositePainters.Interfaces;
+using System;
 
 namespace M4_CompositePainters
 {
-    public class Painter
+    // Leaf component.
+    public class Painter : IPainter
     {
-        private int daysPerHouse;
+        private double daysPerHouse;
 
         private string name;
 
-        public Painter(string name, int daysPerHouse)
+        public Painter(string name, double daysPerHouse)
         {
             this.name = name;
             this.daysPerHouse = daysPerHouse;
         }
 
-        public double PaintFor(double totalDays)
+        public double Paint(double houses)
         {
-            double totalHouses = totalDays / this.daysPerHouse;
-            Console.WriteLine($"{name} painted {totalHouses:N2} in {totalDays:N2} days");
-            return totalHouses;
+            double totalDays = EstimateDays(houses);
+            Console.WriteLine($"{name} painted {houses:N2} in {totalDays:N2} days");
+            return totalDays;
         }
 
-        public int EstimateDays(int housesCount)
+        public double EstimateDays(double housesCount)
         {
             return housesCount * this.daysPerHouse;
         }

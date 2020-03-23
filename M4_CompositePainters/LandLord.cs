@@ -1,4 +1,5 @@
-﻿using System;
+﻿using M4_CompositePainters.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,31 +10,19 @@ namespace M4_CompositePainters
         private int totalHouses;
 
         // The dedicated painters
-        private IEnumerable<Painter> painters;
+        private IPainter painter;
 
-        public LandLord(int totalHouses, IEnumerable<Painter> painters)
+        public LandLord(int totalHouses, IPainter painter)
         {
             this.totalHouses = totalHouses;
-            this.painters = painters;
+            this.painter = painter;
         }
 
         public void MaintainHouses()
         {
-            double housesPainted = 0.0;
+            double days = this.painter.Paint(this.totalHouses);
 
-            foreach(Painter p in painters)
-            {
-                housesPainted += p.PaintFor(totalHouses / TotalSpeedHousesPerDay());
-            }
-
-            Console.WriteLine($"\nPainted {housesPainted:0} houses.");
+            Console.WriteLine($"\nPainted {totalHouses:0} houses in {days:N2} days.");
         }
-
-        private double TotalSpeedHousesPerDay()
-        {
-            var daysPerHouseDenominator = 1;
-            return painters.Aggregate(0.0, (current, next) => current + ((double)daysPerHouseDenominator / next.EstimateDays(daysPerHouseDenominator)));
-        }
-
     }
 }
