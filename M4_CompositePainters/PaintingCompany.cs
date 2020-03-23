@@ -10,51 +10,28 @@ namespace M4_CompositePainters
     {
         private IEnumerable<IPainter> painters;
 
-        public PaintingCompany(IEnumerable<IPainter> painters)
+        private IPaintingScheduler scheduler;
+
+        public PaintingCompany(IEnumerable<IPainter> painters, IPaintingScheduler scheduler)
         {
             this.painters = painters;
+            this.scheduler = scheduler;
         }
 
         public double EstimateDays(double numberOfHouses)
         {
-            return numberOfHouses / GetOverallVelocity();
+            return scheduler.Organize(painters, numberOfHouses)
+                .Select(t => t.Painter.EstimateDays(t.HousesToPaint))
+                .First();
         }
 
         public double Paint(double houses)
         {
-            // Calculate the proportion of each subsidiary's velocity to the total velocity and give
-            // that proportion of houses to that subsidiary.
-            var overallVelocity = GetOverallVelocity();
-            var daysPerHouseDenominator = 1.0;
-
-            // For "self-employed Jon the velocity is 1/7 (0.143 house/day)
-            // For "smallPaintingCompany" the overall velocity is 0.45 (0.2 house/day Andrey's velocity + 0.25 house/day Ivan's velocity).
-            var velocities = this.painters
-                .Select(p => new
-                {
-                    Painter = p,
-                    PainterVelocity = daysPerHouseDenominator / p.EstimateDays(daysPerHouseDenominator)
-                });
-
-            // For every constituent of the painters list its Paint(HousesToPaint) method returns the same value,
-            // becuase the passed HousesToPaint paramenter has calculated based on the constituent overall speed,
-            // we can take First() row value as the overall mainenance duration.
-            double totalDays = velocities.Select(z => new
-                {
-                    z.Painter,
-                    HousesToPaint = houses * z.PainterVelocity / overallVelocity
-                })
+            // "constituent" is either a paining company or a painter.
+            return scheduler.Organize(this.painters, houses)
                 .Select(constituent => constituent.Painter.Paint(constituent.HousesToPaint))
                 .ToList() // To get every leaf painter Paint() method executed.
                 .First();
-
-            return totalDays;
-        }
-
-        private double GetOverallVelocity()
-        {
-            var daysPerHouseDenominator = 1.0;
-            return painters.Aggregate(0.0, (current, next) => current + (daysPerHouseDenominator / next.EstimateDays(daysPerHouseDenominator)));
         }
     }
 }
